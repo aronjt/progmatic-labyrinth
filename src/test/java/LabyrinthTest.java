@@ -394,7 +394,7 @@ public class LabyrinthTest {
     
     // TODO
     private Player getWallFollowerPlayerImpl() {
-        return null;
+        return new RandomPlayer();
     }
     
     // TODO
