@@ -7,6 +7,7 @@ import com.progmatic.labyrinthproject.exceptions.InvalidMoveException;
 import com.progmatic.labyrinthproject.interfaces.Labyrinth;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,14 +17,14 @@ import java.util.Scanner;
  */
 public class LabyrinthImpl implements Labyrinth {
 
-    private Labyrinth l;
     private Coordinate player;
     private CellType[][] lab;
-    private boolean isFinish;
+
 
 
     public LabyrinthImpl() {
         lab = new CellType[1][1];
+        player = null;
     }
 
     @Override
@@ -79,17 +80,31 @@ public class LabyrinthImpl implements Labyrinth {
 
     @Override
     public CellType getCellType(Coordinate c) throws CellException {
+        if (c.getCol() < 0 || c.getRow() < 0) {
+            throw new CellException(c.getRow(), c.getCol(), "Hibás koordináta");
+        }
+        if (c.getRow() > lab.length - 1 || c.getCol() > lab[0].length - 1) {
+            throw new CellException(c, "Túl nagy koordináta");
+        }
         return lab[c.getRow()][c.getCol()];
     }
 
     @Override
     public void setSize(int width, int height) {
-        l = new LabyrinthImpl();
         lab = new CellType[height][width];
     }
 
     @Override
     public void setCellType(Coordinate c, CellType type) throws CellException {
+        if (c.getCol() < 0 || c.getRow() < 0) {
+            throw new CellException(c.getRow(), c.getCol(), "Hibás koordináta");
+        }
+        if (c.getRow() > lab.length - 1 || c.getCol() > lab[0].length - 1) {
+            throw new CellException(c, "Túl nagy koordináta");
+        }
+        if (type.equals(CellType.START)) {
+            player = new Coordinate(c.getCol(), c.getRow());
+        }
         lab[c.getRow()][c.getCol()] = type;
     }
 
@@ -100,17 +115,48 @@ public class LabyrinthImpl implements Labyrinth {
 
     @Override
     public boolean hasPlayerFinished() {
-        return isFinish;
+        return lab[player.getRow()][player.getCol()] == CellType.END;
     }
 
     @Override
     public List<Direction> possibleMoves() {
-        return null;
+        List<Direction> directions = new ArrayList<>();
+        int hh = player.getRow();
+        int ww = player.getCol();
+        if (hh > 0 && lab[hh-1][ww] == CellType.EMPTY) {
+            directions.add(Direction.NORTH);
+        }
+        if (hh < lab.length - 1 && lab[hh+1][ww] == CellType.EMPTY) {
+            directions.add(Direction.SOUTH);
+        }
+        if (ww < lab[hh].length - 1 && lab[hh][ww+1] == CellType.EMPTY) {
+            directions.add(Direction.EAST);
+        }
+        if (ww > 0 && lab[hh][ww-1] == CellType.EMPTY) {
+            directions.add(Direction.WEST);
+        }
+        return directions;
     }
 
     @Override
     public void movePlayer(Direction direction) throws InvalidMoveException {
-
+        if (possibleMoves().contains(direction)) {
+            switch (direction) {
+                case NORTH:
+                    player = new Coordinate(player.getCol(), player.getRow() - 1);
+                    break;
+                case SOUTH:
+                    player = new Coordinate(player.getCol(), player.getRow() + 1);
+                    break;
+                case EAST:
+                    player = new Coordinate(player.getCol() + 1, player.getRow());
+                    break;
+                case WEST:
+                    player = new Coordinate(player.getCol() - 1, player.getRow());
+                    break;
+            }
+        } else {
+            throw new InvalidMoveException();
+        }
     }
-
 }
