@@ -17,29 +17,29 @@ import java.util.Scanner;
 public class LabyrinthImpl implements Labyrinth {
 
     private Labyrinth l;
-    private Coordinate heightWight;
+    private Coordinate player;
     private CellType[][] lab;
-
+    private boolean isFinish;
 
 
     public LabyrinthImpl() {
-        
+        lab = new CellType[1][1];
     }
 
     @Override
     public int getWidth() {
-        if (l == null) {
+        if (lab[0].length == 1) {
             return -1;
         }
-        return heightWight.getCol();
+        return lab[0].length;
     }
 
     @Override
     public int getHeight() {
-        if (l == null) {
+        if (lab.length == 1) {
             return -1;
         }
-        return heightWight.getRow();
+        return lab.length;
     }
 
     @Override
@@ -48,9 +48,7 @@ public class LabyrinthImpl implements Labyrinth {
             Scanner sc = new Scanner(new File(fileName));
             int width = Integer.parseInt(sc.nextLine());
             int height = Integer.parseInt(sc.nextLine());
-            this.heightWight = new Coordinate(width, height);
             lab = new CellType[height][width];
-            l.setSize(width, height);
 
             for (int hh = 0; hh < height; hh++) {
                 String line = sc.nextLine();
@@ -65,12 +63,13 @@ public class LabyrinthImpl implements Labyrinth {
                             break;
                         case 'S':
                             type = CellType.START;
+                            player = new Coordinate(ww, hh);
                             break;
                         default:
                             type = CellType.EMPTY;
                             break;
                     }
-                    l.setCellType(new Coordinate(ww, hh), type);
+                    setCellType(new Coordinate(ww, hh), type);
                 }
             }
         } catch (FileNotFoundException | NumberFormatException | CellException ex) {
@@ -85,6 +84,7 @@ public class LabyrinthImpl implements Labyrinth {
 
     @Override
     public void setSize(int width, int height) {
+        l = new LabyrinthImpl();
         lab = new CellType[height][width];
     }
 
@@ -95,12 +95,12 @@ public class LabyrinthImpl implements Labyrinth {
 
     @Override
     public Coordinate getPlayerPosition() {
-        return null;
+        return player;
     }
 
     @Override
     public boolean hasPlayerFinished() {
-        return false;
+        return isFinish;
     }
 
     @Override
