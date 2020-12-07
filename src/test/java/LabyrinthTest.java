@@ -6,6 +6,7 @@
 
 import com.progmatic.labyrinthproject.Coordinate;
 import com.progmatic.labyrinthproject.LabyrinthImpl;
+import com.progmatic.labyrinthproject.RandomPlayer;
 import com.progmatic.labyrinthproject.enums.CellType;
 import com.progmatic.labyrinthproject.enums.Direction;
 import com.progmatic.labyrinthproject.exceptions.CellException;
@@ -241,11 +242,11 @@ public class LabyrinthTest {
     @Test
     public void testRandomPlayer() throws Exception {
         String[][] lArr = {
-            {"#", "#", "#", "#", "#"},
-            {"S", " ", "#", " ", "E"},
-            {"#", " ", "#", " ", "#"},
-            {"#", " ", " ", " ", "#"},
-            {"#", "#", "#", "#", "#"}};
+                {"#", "#", "#", "#", "#"},
+                {"S", " ", "#", " ", "E"},
+                {"#", " ", "#", " ", "#"},
+                {"#", " ", " ", " ", "#"},
+                {"#", "#", "#", "#", "#"}};
         Labyrinth l = fromString(lArr);
         Player rp = getRandomPlayerImpl();
         while (! l.hasPlayerFinished()) {
@@ -388,7 +389,7 @@ public class LabyrinthTest {
     
     // TODO
     private Player getRandomPlayerImpl() {
-        return null;
+        return new RandomPlayer();
     }
     
     // TODO

@@ -126,13 +126,25 @@ public class LabyrinthImpl implements Labyrinth {
         if (hh > 0 && lab[hh-1][ww] == CellType.EMPTY) {
             directions.add(Direction.NORTH);
         }
+        if (hh > 0 && lab[hh-1][ww] == CellType.END) {
+            directions.add(Direction.NORTH);
+        }
         if (hh < lab.length - 1 && lab[hh+1][ww] == CellType.EMPTY) {
+            directions.add(Direction.SOUTH);
+        }
+        if (hh < lab.length - 1 && lab[hh-1][ww] == CellType.END) {
             directions.add(Direction.SOUTH);
         }
         if (ww < lab[hh].length - 1 && lab[hh][ww+1] == CellType.EMPTY) {
             directions.add(Direction.EAST);
         }
+        if (ww < lab[hh].length - 1 && lab[hh][ww+1] == CellType.END) {
+            directions.add(Direction.EAST);
+        }
         if (ww > 0 && lab[hh][ww-1] == CellType.EMPTY) {
+            directions.add(Direction.WEST);
+        }
+        if (ww > 0 && lab[hh][ww-1] == CellType.END) {
             directions.add(Direction.WEST);
         }
         return directions;
